@@ -1,0 +1,48 @@
+{
+  "name": "llm-chat-backend",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.2",
+    "prettier": "^3.3.3",
+    "syncpack": "^10.0.0",
+    "turbo": "^2.6.1"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,jsx}": [
+      "pnpm eslint"
+    ],
+    "*.{json,md,html,js,jsx,ts,tsx}": [
+      "pnpm prettier --write"
+    ]
+  },
+  "packageManager": "pnpm@9.0.6",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "format": "turbo run format",
+    "lint": "turbo run lint",
+    "prepare": "husky install",
+    "start": "turbo run start",
+    "test": "turbo run test"
+  },
+  "syncpack": {
+    "dependencyTypes": [
+      "dev",
+      "overrides",
+      "peer",
+      "pnpmOverrides",
+      "prod",
+      "resolutions"
+    ]
+  }
+}

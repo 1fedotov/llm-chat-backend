@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "outDir": "./dist",
+    "noEmit": false
+  },
+  "extends": "../../tsconfig.json",
+  "include": ["**/*.ts", "**/*.d.ts"]
+}

@@ -1,0 +1,11 @@
+# common
+.yarn/
+build/
+dist/
+node_modules/
+ai-agent-legacy/
+pnpm-lock.yaml
+
+# scss
+**/styles/_colors.scss
+**/styles/_maps.scss

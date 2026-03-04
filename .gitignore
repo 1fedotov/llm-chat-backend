@@ -1,0 +1,116 @@
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Swap the comments on the following lines if you don't wish to use zero-installs
+# Documentation here: https://yarnpkg.com/features/zero-installs
+# !.yarn/cache
+.pnp.*
+
+**/node_modules
+.env
+
+# from solito --------------------------------------
+
+# OSX
+.DS_Store
+
+# Xcode
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Android/IntelliJ
+build/
+.idea
+.gradle
+local.properties
+*.iml
+
+# node.js
+npm-debug.log
+yarn-error.log
+
+# BUCK
+buck-out/
+\.buckd/
+*.keystore
+
+# fastlane
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/
+
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
+
+# Bundle artifacts
+*.jsbundle
+
+# CocoaPods
+/ios/Pods/
+
+# Expo
+.expo/*
+web-build/
+
+**/*/.expo
+
+**/*/.next
+
+**/*/ios
+**/*/android
+
+storybook-static
+
+build/**
+dist/
+# Turborepo
+.turbo
+
+*.log
+envs/
+
+# Ignore everything under .claude/
+.claude/**
+
+# But do NOT ignore files directly under .claude/
+!.claude/*
+# Re-ignore any folders directly under .claude/ (will catch folders again)
+.claude/*/
+
+# EXCEPT allow the .claude/commands/ folder and its contents
+!.claude/commands/
+.claude/commands/**
+
+# EXCEPT allow the .claude/commands/ folder and its contents
+!.claude/templates/
+
+# Specifically ignore .claude/settings.local.json
+.claude/settings.local.json
+.cursor
+
+# Serena MCP server files
+.serena/
+
+# personal devs stuff
+personal_docs/

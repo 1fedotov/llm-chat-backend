@@ -1,0 +1,6 @@
+build/
+dist/
+node_modules/
+ai-agent-legacy/
+storybook-static/
+pnpm-lock.yaml
