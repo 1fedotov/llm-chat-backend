@@ -1,21 +1,32 @@
 import { Request, Response, NextFunction } from "express"
-import { findSession, findSessions } from "../services/session.service";
-
-
-export async function createSession(req: Request, res: Response) {
-
-}
+import { findSession, findSessions, createSession } from "../services/session.service";
+import { callAgent } from "../agents/ollama/agent"
+import type { sendMessageInput } from "../schema/model.schema";
+import sessionModel from "../models/session.model";
 
 export async function getSessions(req: Request, res: Response) {
     const sessions = await findSessions({});
+
     return res.send(sessions);
 }
 
-export async function sendMessage(req: Request, res: Response) {
+export async function sendMessage(req: Request<sendMessageInput["params"], {}, sendMessageInput["body"]>, res: Response) {
+    const { message } = req.body;
     const sessionId = req.params.sessionId;
-    const message = req.body.message;
 
-    // Send sessionId and message to our Agent and receive answer
+    const aiResponse = await callAgent(sessionId, message);
+
+    return res.json({sessionId, aiResponse});
+}
+
+export async function createSessionAndSendMessage(req: Request, res: Response) {
+    const { message } = req.body;
+    const sessionId = await createSession();
+
+    const aiResponse = await callAgent(sessionId, message);
+
+    return res.json({sessionId, aiResponse});
+
 }
 
 export async function getSessionMessages(req: Request, res: Response) {
@@ -32,5 +43,13 @@ export async function getSessionMessages(req: Request, res: Response) {
 }
 
 export async function deleteSession(req: Request, res: Response) {
+    const sessionId = req.params.sessionId;
+    
+    const result = await sessionModel.deleteOne({ _id: sessionId });
 
+    if (result.deletedCount === 0) {
+        return res.sendStatus(500);
+    }
+
+    return res.status(200).send(`Session ${sessionId} deleted.`);
 }
