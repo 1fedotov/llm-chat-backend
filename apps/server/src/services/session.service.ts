@@ -3,11 +3,11 @@ import { QueryFilter } from "mongoose";
 import { sessionDocument } from "../models/session.model";
 
 export async function findSessions(query: QueryFilter<sessionDocument>) {
-    return sessionModel.find(query).lean();
+    return sessionModel.find(query).select({messages: 0}).lean();
 }
 
 export async function findSession(query: QueryFilter<sessionDocument>) {
-    return sessionModel.findOne(query);
+    return sessionModel.findOne(query).lean();
 }
 
 export async function createSession(): Promise<string> {

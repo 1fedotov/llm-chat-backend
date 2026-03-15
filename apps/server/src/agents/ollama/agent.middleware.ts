@@ -1,12 +1,12 @@
-import { request } from "express";
 import { createMiddleware, AIMessage, BaseMessage, HumanMessage } from "langchain";
 import z from "zod";
-import { createSession, findSession, addMessageToSession } from "../../services/session.service";
+import { findSession, addMessageToSession } from "../../services/session.service";
 
 const contextSchema = z.object({
     sessionId: z.string(),
 })
 
+// Middleware which allows Langchain ReAct Agent to save/download its conversations into/from MongoDB
 export const SessionHistoryMiddleware = createMiddleware({
     name: "SessionHistoryMiddleware",
     contextSchema,
@@ -64,30 +64,5 @@ export const SessionHistoryMiddleware = createMiddleware({
             role: lastMessage.type,
             content: lastMessage.content as string,
         });
-    },
-})
-
-export const LoggingMiddleware = createMiddleware({
-    name: "LoggingMiddleware",
-    contextSchema,
-    beforeModel: (runtime, state) => {
-        console.log(`Hello from the agent's LoggingMiddleware!`);
-        const { sessionId } = state.context;
-        console.log(`SessionId: ${sessionId}`);
-
-        let messages = runtime.messages;
-        console.log(`First message: ${messages[0].content}`);
-        console.log(`Messages length: ${messages.length}`);
-        console.log(`Messages: ${messages}`);
-
-        runtime.messages = [new HumanMessage("Tell me a little joke!"), ...messages]
-        messages = runtime.messages;
-        console.log(`First message: ${messages[0].content}`);
-        console.log(`Messages length: ${messages.length}`);
-        console.log(`Messages: ${messages}`);
-
-        return {
-            messages,
-        };
     },
 })

@@ -10,22 +10,58 @@ export async function getSessions(req: Request, res: Response) {
     return res.send(sessions);
 }
 
+// Sends message to the AI and streams the response
 export async function sendMessage(req: Request<sendMessageInput["params"], {}, sendMessageInput["body"]>, res: Response) {
     const { message } = req.body;
     const sessionId = req.params.sessionId;
 
-    const aiResponse = await callAgent(sessionId, message);
+    // 1. Set SSE headers to keep the connection open
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+    });
 
-    return res.json({sessionId, aiResponse});
+    try {
+        // 2. Iterate through the generator
+        for await (const chunk of callAgent(sessionId, message)) {
+            // 3. Send data in SSE format
+            res.write(`data: ${JSON.stringify({ sessionId, reply: chunk })}\n\n`);
+        }
+    } catch (error) {
+        console.error("Streaming error:", error);
+    } finally {
+        // 4. Close the connection when done
+        res.end();
+    }
+
+    // return res.json({sessionId, aiResponse});
 }
 
+// Creates session, sends message to the AI and streams the response
 export async function createSessionAndSendMessage(req: Request, res: Response) {
     const { message } = req.body;
     const sessionId = await createSession();
 
-    const aiResponse = await callAgent(sessionId, message);
+    // 1. Set SSE headers to keep the connection open
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+    });
 
-    return res.json({sessionId, aiResponse});
+    try {
+        // 2. Iterate through the generator
+        for await (const chunk of callAgent(sessionId, message)) {
+            // 3. Send data in SSE format
+            res.write(`data: ${JSON.stringify({ sessionId, reply: chunk })}\n\n`);
+        }
+    } catch (error) {
+        console.error("Streaming error:", error);
+    } finally {
+        // 4. Close the connection when done
+        res.end();
+    }
 
 }
 

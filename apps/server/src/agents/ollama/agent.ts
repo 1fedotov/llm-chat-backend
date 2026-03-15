@@ -1,10 +1,7 @@
 import { ChatOllama } from "@langchain/ollama";
 import { createAgent, HumanMessage } from "langchain";
-import { MongoDBChatMessageHistory } from "@langchain/mongodb";
-import { RunnableWithMessageHistory } from "@langchain/core/runnables";
-import { ChatPromptTemplate, MessagesPlaceholder, } from "@langchain/core/prompts";
-import { Collection, Document as MongoDBDocument, } from "mongodb";
-import { LoggingMiddleware, SessionHistoryMiddleware } from "./agent.middleware";
+import { AIMessageChunk } from "@langchain/core/messages";
+import { SessionHistoryMiddleware } from "./agent.middleware";
 
 const llm = new ChatOllama({
     model: "gemma3",
@@ -17,34 +14,20 @@ const agent = createAgent({
     middleware: [SessionHistoryMiddleware],
 });
 
-// const prompt = ChatPromptTemplate.fromMessages([
-//   ["system", "You're an assistant who's good at {ability}"],
-//   new MessagesPlaceholder("history"),
-//   ["human", "{question}"],
-// ]);
 
-// const chain = prompt.pipe(llm);
-
-// export async function sendMessageToAI(sessionId: string, message: string, collection: Collection<Document>) {
-//     const agentWithHistory = new RunnableWithMessageHistory({
-//         runnable: chain,
-//         getMessageHistory: () => new MongoDBChatMessageHistory({
-//             collection,
-//             sessionId
-//         }),
-//         inputMessagesKey: "content",
-//         historyMessagesKey: "messages"
-//         });
-// }
-
-export async function callAgent(sessionId: string, message: string): Promise<string> {
+export async function* callAgent(sessionId: string, message: string) {
     try {
         const context = {
             sessionId,
         }
-        const response = await agent.invoke({messages: [new HumanMessage(message)] }, {context});
+        const response = await agent.stream({messages: [new HumanMessage(message)] }, {context, streamMode: "messages"});
 
-        return response.messages[response.messages.length - 1].content as string;
+        for await (const [messageChunk, metadata] of response) {
+        // Only stream chunks from the "agent" node (the LLM)
+        if (AIMessageChunk.isInstance(messageChunk) && messageChunk.content) {
+            yield messageChunk.content;
+        }
+    }
 
     } catch (error) {
         console.error(error);
