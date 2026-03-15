@@ -56,6 +56,7 @@ sequenceDiagram
   participant P1 as Server
   participant P2 as AI Agent
   participant P3@{ "type": "database" } as Database
+  
   A1->>P1: POST req
   P1->>P2: Req.message
   P2->>P3: Req.sessionId
