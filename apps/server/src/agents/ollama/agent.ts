@@ -1,19 +1,34 @@
 import { AIMessageChunk } from "@langchain/core/messages";
 import { ChatOllama } from "@langchain/ollama";
 import { HumanMessage, createAgent } from "langchain";
-
 import { SessionHistoryMiddleware } from "./agent.middleware";
+import config from "../../config/config";
+import logger from "../../utils/logger";
+
 
 const llm = new ChatOllama({
-  model: "gemma3",
+  model: config.llm_model,
+  baseUrl: config.llm_url,
   temperature: 0,
   maxRetries: 2,
+  think: false,
 });
 
 const agent = createAgent({
   model: llm,
   middleware: [SessionHistoryMiddleware],
 });
+
+export async function checkLlm() {
+  try {
+    logger.info(`Waiting for a response from LLM at URL: ${config.llm_url}`);
+    const response = await llm.invoke("Hello!");
+    logger.info(`Connected to LLM at URL: ${config.llm_url}`);
+  } catch (error) {
+    logger.error("Could not connect to LLM!");
+    logger.error(`Error message: ${error}`);
+  }
+}
 
 export async function* callAgent(sessionId: string, message: string) {
   try {

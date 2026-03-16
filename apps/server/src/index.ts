@@ -12,6 +12,7 @@ import validate from "./middleware/validateResourse.js";
 import { sendMessageSchema } from "./schema/model.schema";
 import connectDB from "./utils/connect.js";
 import logger from "./utils/logger.js";
+import { checkLlm } from "./agents/ollama/agent";
 
 const port = config.port;
 
@@ -27,6 +28,7 @@ app.listen(config.port, () => {
   logger.info(`App is running at http://localhost:${port}`);
 
   connectDB();
+  checkLlm();
 
   // Get all sessions
   app.get("/chat", getSessions);
