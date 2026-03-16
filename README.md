@@ -52,19 +52,29 @@ classDiagram
 
 ```mermaid
 sequenceDiagram
-  actor A1 as User
-  participant P1 as Server
-  participant P2 as AI Agent
-  participant P3@{ "type": "database" } as Database
-  
-  A1->>P1: POST req
-  P1->>P2: Req.message
-  P2->>P3: Req.sessionId
-  P3->>P2: sessionId.history
-  P2->>P2: Generating the answer
-  P2->>P3: sessionId.history
-  P2->>P1: Return result
-  P1->>A1: Return answer
+    actor A1 as User
+    participant P1 as Server
+    participant P2 as AI Agent
+    participant P3 as 💾 Database
+
+    A1->>P1: POST req
+    activate P1
+    P1->>P2: Req.message
+    activate P2
+    
+    P2->>P3: Req.sessionId
+    activate P3
+    P3-->>P2: sessionId.history
+    deactivate P3
+    
+    Note right of P2: AI is "thinking"...
+    
+    P2->>P3: Update sessionId.history
+    P2->>P1: Return result
+    deactivate P2
+    
+    P1->>A1: Return answer
+    deactivate P1
 ```
 ## Link or location of API documentation
 
