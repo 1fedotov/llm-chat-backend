@@ -1,21 +1,36 @@
 # LLM Chat Backend
-
+his project uses LangChain to orchestrate an AI agent powered by Ollama, with MongoDB for persistent chat memory, all managed within a pnpm monorepo.
 ## Prerequisites
-
+- Docker & Docker Compose
+  OR
 - Node.js v22 or higher
 - pnpm v9 or higher
 - Ollama v0.18.0 or higher
 - MongoDB 8.2.2 or higher
 
 ## Quick Start
-
+### Local Development
+1. **Clone repository:**
+```bash
+git clone <your-repo-url>
+cd <project-folder>
 ```
-pnpm install
-pnpm dev
+2. **Configure Environment:**
+Create a ```.env``` file in the root directory:
 ```
+OLLAMA_MODEL=gemma3:270m
+```
+3. **Launch the Stack:**
+```bash
+docker compose up --build
+```
+*This will build the server, start MongoDB, and trigger the Ollama entrypoint script to pull the Gemma model.*
 
 ## Architecture Diagram
-
+The project is designed to run as a multi-container stack. In production (Google Cloud Run), these containers run as sidecars sharing the same network interface.
+-**Backend Server**: Node.js (TypeScript) + LangChain.
+-**AI Engine**: Ollama (running gemma3:270m).
+-**Database**: MongoDB (Chat history storage).
 ```mermaid
 architecture-beta
 
