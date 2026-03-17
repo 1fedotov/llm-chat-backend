@@ -1,8 +1,10 @@
 # LLM Chat Backend
-his project uses LangChain to orchestrate an AI agent powered by Ollama, with MongoDB for persistent chat memory, all managed within a pnpm monorepo.
+This project uses LangChain to orchestrate an AI agent powered by Ollama, with MongoDB for persistent chat memory, all managed within a pnpm monorepo.
 ## Prerequisites
 - Docker & Docker Compose
+  
   OR
+  
 - Node.js v22 or higher
 - pnpm v9 or higher
 - Ollama v0.18.0 or higher
@@ -28,9 +30,13 @@ docker compose up --build
 
 ## Architecture Diagram
 The project is designed to run as a multi-container stack. In production (Google Cloud Run), these containers run as sidecars sharing the same network interface.
--**Backend Server**: Node.js (TypeScript) + LangChain.
--**AI Engine**: Ollama (running gemma3:270m).
--**Database**: MongoDB (Chat history storage).
+
+**- Backend Server**: Node.js (TypeScript) + LangChain.
+
+**- AI Engine**: Ollama (running gemma3:270m).
+
+**- Database**: MongoDB (Chat history storage).
+
 ```mermaid
 architecture-beta
 
@@ -63,7 +69,8 @@ classDiagram
         content: String
     }
 ```
-## How your data model supports session and message queries
+## How this data model supports session and message queries
+Messages are saved into Session document's ```history``` field. Queries are implemented via agent's middleware which reads and writes the database. Basically it is a simplified MongoDBSaver which saves checkpoints to the database and read it before the llm call. The diagram below displays the sequence of ```POST 'chat/:sessionID'``` request.
 
 ```mermaid
 sequenceDiagram
@@ -97,25 +104,3 @@ sequenceDiagram
 ## Public deployment URL 
 
 
-- Feel free to install other dependencies you need.
-
-"devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2", -> A prettier plugin to sort import declarations by provided Regular Expression order.
-
-    "@typescript-eslint/eslint-plugin": "^5.45.0",
-    "eslint": "^8.57.1", -> tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.
-
-    "eslint-plugin-import": "2.31.0", -> intends to support linting of ES2015+ (ES6+) import/export syntax, and prevent issues with misspelling of file paths and import names. 
-
-    "eslint-plugin-prettier": "^5.2.1",
-
-    "husky": "^8.0.0", -> Automatically lint your commit messages, code, and run tests upon committing or pushing.
-
-    "lint-staged": "^13.2.2", -> Run tasks like formatters and linters against staged git files and don't let 💩 slip into your code base!
-
-    "prettier": "^3.3.3",
-
-    "syncpack": "^10.0.0", ->  is a command-line tool for consistent dependency versions in large JavaScript Monorepos
-
-    "turbo": "^2.6.1" -> is a high-performance build system for JavaScript and TypeScript codebases. It is designed for scaling monorepos and also makes workflows in single-package workspaces faster, too.
-  },
