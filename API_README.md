@@ -1,5 +1,5 @@
 ## List of API Endpoints
-### 'chat{s}/'
+### 'chat/'
 General endpoint to initiate conversation or to retrieve saved sessions ids
 
 ```GET``` returns a list of all sessions
@@ -36,7 +36,7 @@ Response body:
   text: "First chunk",
 }
 ```
-### 'chat{s}/:sessionId'
+### 'chat/:sessionId'
 Endpoint to access certain session by **sessionId** parameter
 
 ```GET``` returns chat history of the specified session. No body required, only sessionId
