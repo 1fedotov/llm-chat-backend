@@ -1,12 +1,16 @@
 ## List of API Endpoints
-### 'chat/'
-General endpoint to initiate conversation or to retrieve saved sessions ids
+All the communication with backend AI is being carried out by 2 path: ```/chat``` and ```/chat/:sessionId```.
 
-```GET``` returns a list of all sessions
+Example of URL for local deployment: ```http://localhost:5000/chat```
+### HTTP Methods
+### ```'/chat'```
+General endpoint to initiate conversation or to retrieve saved sessions ids.
+
+**```GET BASE_URL/chat```** returns a list of all sessions
 
 no body required.
 
-```POST``` sends a message to the backend to start the chat and initiate Session. Returns a stream from llm and sessionId
+**```POST BASE_URL/chat```** sends a message to the backend to start the chat and initiate Session. Returns a stream from llm and sessionId.
 
 Request body:
 
@@ -36,12 +40,12 @@ Response body:
   text: "First chunk",
 }
 ```
-### 'chat/:sessionId'
+### ```'/chat/:sessionId'```
 Endpoint to access certain session by **sessionId** parameter
 
-```GET``` returns chat history of the specified session. No body required, only sessionId
+**```GET BASE_URL/chat/:sessionId```** returns chat history of the specified session. No body required, only sessionId.
 
-```POST``` sends a message to the chat by sessionId parameter and recieves the reply
+**```POST BASE_URL/chat/:sessionId```** sends a message to the chat by sessionId parameter and recieves the reply.
 
 Request body:
 
@@ -51,4 +55,4 @@ Request body:
 }
 ```
 
-```DELETE``` deletes the session, uses sessionId parameter 
+**```DELETE BASE_URL/chat/:sessionId```** deletes the session, uses sessionId parameter.
