@@ -98,9 +98,9 @@ sequenceDiagram
     P1->>A1: Return answer
     deactivate P1
 ```
-## Link or location of API documentation
-
+## location of API documentation
+You find API documentation in API_README.md
 
 ## Public deployment URL 
 
-
+https://ollama-chat-backend-477781310393.us-central1.run.app
