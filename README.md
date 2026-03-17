@@ -12,8 +12,8 @@ his project uses LangChain to orchestrate an AI agent powered by Ollama, with Mo
 ### Local Development
 1. **Clone repository:**
 ```bash
-git clone <your-repo-url>
-cd <project-folder>
+git clone https://github.com/1fedotov/llm-chat-backend.git
+cd llm-chat-backend
 ```
 2. **Configure Environment:**
 Create a ```.env``` file in the root directory:
