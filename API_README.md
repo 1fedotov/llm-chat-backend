@@ -1,58 +1,57 @@
-## List of API Endpoints
-All the communication with backend AI is being carried out by 2 path: ```/chat``` and ```/chat/:sessionId```.
+# API Documentation: Chat Endpoints
 
-Example of URL for local deployment: ```http://localhost:5000/chat```
-### HTTP Methods
-### ```'/chat'```
-General endpoint to initiate conversation or to retrieve saved sessions ids.
+All backend AI communication is handled via two primary paths: `/chat` and `/chat/:sessionId`.
 
-**```GET BASE_URL/chat```** returns a list of all sessions
+* **Local Deployment URL:** `http://localhost:5000/chat`
 
-no body required.
+---
 
-**```POST BASE_URL/chat```** sends a message to the backend to start the chat and initiate Session. Returns a stream from llm and sessionId.
+## 1. Global Chat Endpoint: `/chat`
 
-Request body:
+Used to list existing sessions or initiate a brand-new conversation.
 
-```
-{
-  message: "Hello World!"
-}
-```
+### **GET** `/chat`
+**Description:** Retrieves a list of all saved session IDs.
+* **Body:** Not required.
+* **Response:** A list of session objects/IDs.
 
-Response body:
+### **POST** `/chat`
+**Description:** Sends a message to the backend to start a chat and initiate a new session. Returns an LLM stream and the generated `sessionId`.
+* **Request Body:**
+    ```json
+    {
+      "message": "Hello World!"
+    }
+    ```
+* **Response Body (Streamed):**
+    ```json
+    { "sessionId": "asdf123", "text": "First chunk" }
+    { "sessionId": "asdf123", "text": "Second chunk" }
+    { "sessionId": "asdf123", "text": "Last chunk!" }
+    ```
 
-```
-{
-  sessionId: "asdfqweqwgqwhq",
-  text: "Last chunk!",
-}
-.
-.
-.
-{
-  sessionId: "asdfqweqwgqwhq",
-  text: "Second chunk",
-}
+---
 
-{
-  sessionId: "asdfqweqwgqwhq",
-  text: "First chunk",
-}
-```
-### ```'/chat/:sessionId'```
-Endpoint to access certain session by **sessionId** parameter
+## 2. Session-Specific Endpoint: `/chat/:sessionId`
 
-**```GET BASE_URL/chat/:sessionId```** returns chat history of the specified session. No body required, only sessionId.
+Used to interact with or manage a specific chat history.
 
-**```POST BASE_URL/chat/:sessionId```** sends a message to the chat by sessionId parameter and recieves the reply.
+### **GET** `/chat/:sessionId`
+**Description:** Returns the full chat history of the specified session. 
+* **Parameters:** `sessionId`
+* **Body:** Not required.
 
-Request body:
+### **POST** `/chat/:sessionId`
+**Description:** Sends a message to a specific session and receives a streamed reply.
+* **Parameters:** `sessionId`
+* **Request Body:**
+    ```json
+    {
+      "message": "Tell me more!"
+    }
+    ```
 
-```
-{
-  message: "Hello World!"
-}
-```
-
-**```DELETE BASE_URL/chat/:sessionId```** deletes the session, uses sessionId parameter.
+### **DELETE** `/chat/:sessionId`
+**Description:** Permanently deletes the session identified by the `sessionId` parameter.
+* **Parameters:** `sessionId`
+* **Body:** Not required.
