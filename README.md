@@ -1,42 +1,56 @@
-# LLM Chat Backend
-This project uses LangChain to orchestrate an AI agent powered by Ollama, with MongoDB for persistent chat memory, all managed within a pnpm monorepo.
-## Prerequisites
-- Docker & Docker Compose
-  
-  OR
-  
-- Node.js v22 or higher
-- pnpm v9 or higher
-- Ollama v0.18.0 or higher
-- MongoDB 8.2.2 or higher
+# 🤖 LLM Chat Backend
 
-## Quick Start
-### Local Development
-1. **Clone repository:**
-```bash
-git clone https://github.com/1fedotov/llm-chat-backend.git
-cd llm-chat-backend
-```
-2. **Configure Environment:**
-Create a ```.env``` file in the root directory:
-```
-OLLAMA_MODEL=gemma3:270m
-```
-3. **Launch the Stack:**
-```bash
-docker compose up --build
-```
-*This will build the server, start MongoDB, and trigger the Ollama entrypoint script to pull the Gemma model.*
+This project leverages **LangChain** to orchestrate an AI agent powered by **Ollama**, using **MongoDB** for persistent chat memory—all managed within a modern **pnpm monorepo** architecture.
 
-## Architecture Diagram
-The project is designed to run as a multi-container stack. In production (Google Cloud Run), these containers run as sidecars sharing the same network interface.
+---
 
-**- Backend Server**: Node.js (TypeScript) + LangChain.
+## 🛠 Prerequisites
 
-**- AI Engine**: Ollama (running gemma3:270m).
+You can run this stack via Docker (recommended) or standalone:
 
-**- Database**: MongoDB (Chat history storage).
+* **Docker & Docker Compose** (Simplest setup)
+    
+    **OR**
 
+* **Local Deployment**:
+  * **Node.js**: v22 or higher
+  * **pnpm**: v9 or higher
+  * **Ollama**: v0.18.0 or higher
+  * **MongoDB**: v8.2.2 or higher
+
+---
+
+## 🚀 Quick Start
+
+### Local Deployment
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/1fedotov/llm-chat-backend.git
+    cd llm-chat-backend
+    ```
+
+2.  **Configure Environment:**
+    Create a `.env` file in the root directory:
+    ```bash
+    OLLAMA_MODEL=gemma3:270m
+    ```
+
+3.  **Launch the Stack:**
+    ```bash
+    docker compose up --build
+    ```
+    *Note: This command builds the server, initializes MongoDB, and executes the Ollama entrypoint script to automatically pull the Gemma model.*
+
+---
+
+## 🏗 Architecture
+
+The project is designed as a multi-container stack. In production (Google Cloud Run), these containers operate as sidecars sharing the same network interface.
+
+* **Backend Server**: Node.js (TypeScript) + LangChain orchestration.
+* **AI Engine**: Ollama (running `gemma3:270m`).
+* **Database**: MongoDB (Persistent chat history storage).
 ```mermaid
 architecture-beta
 
@@ -69,8 +83,11 @@ classDiagram
         content: String
     }
 ```
-## How this data model supports session and message queries
-Messages are saved into Session document's ```history``` field. Queries are implemented via agent's middleware which reads and writes the database. Basically it is a simplified MongoDBSaver which saves checkpoints to the database and read it before the llm call. The diagram below displays the sequence of ```POST 'chat/:sessionID'``` request.
+## Session & Message Handling
+Messages are embedded within the ```history``` field of the Session document.
+The data flow is managed via a custom agent middleware that mimics a **MongoDBSaver**. It functions as a checkpoint system: reading the session history before the LLM call and persisting the updated history immediately after.
+
+## Sequence: ```POST 'chat/:sessionID'```
 
 ```mermaid
 sequenceDiagram
@@ -98,9 +115,6 @@ sequenceDiagram
     P1->>A1: Return answer
     deactivate P1
 ```
-## location of API documentation
-You find API documentation in API_README.md
-
-## Public deployment URL 
-
-https://ollama-chat-backend-477781310393.us-central1.run.app
+## Documentation & Deployment
+* **API Documentation**: Detailed endpoint info can be found in [API Documentation](./API_README.md)
+* **Live Demo**: [Public deployment URL](https://ollama-chat-backend-477781310393.us-central1.run.app)
